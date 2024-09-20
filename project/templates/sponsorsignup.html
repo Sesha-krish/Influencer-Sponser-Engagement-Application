@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Signup form</title>
+        <link rel="stylesheet" href="/static/style.css">
+    </head>
+    <body>
+        <form action="" method="POST">
+            <h2>Sponsor Signup</h2>
+            <label for="usrnm">Enter your Username</label>
+            <input id="usrnm" type="text" placeholder="Username" name="username" required>
+            <label for="pwd">Enter your Password</label>
+            <input id="pwd" type="password" placeholder="password" name="password" required>
+            <label for="pwd">Re enter your password</label>
+                <input id="pwd" type="password" placeholder="password" name="repassword" required>
+                <label for="em">Enter your email</label>
+                <input type="text" name="email" id="em" placeholder="email" required>
+
+            <label for="selectt">What is your Industry?</label>
+                <select id="selectt" name="industry" multiple>
+
+                <option value="Cosmetics">Cosmetics</option>
+                <option value="Fitness">Fitness</option>
+                <option value="Fashion">Fashion</option>
+            </select>
+            <button type="submit">Register</button>
+        
+        </form>
+    </body>
+</html>

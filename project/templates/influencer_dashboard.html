@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Influencer Dashboard</title>
+    <link rel="stylesheet" href="\static\influencerdash.css">
+
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 300px;
+            border-radius: 10px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .slider-container {
+            margin: 20px 0;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Hello, {{ session['username'] }}!</h2>
+            <ul>
+                <li><a href="{{ url_for('influencerdashboard')}}">Dashboard</a></li>
+                <li><a href="{{url_for('find_campaigns')}}">Find campaigns</a></li>
+                <li><a href="{{url_for('profile')}}">Profile</a></li>
+                <li><a href="{{url_for('logout',username=usrnm)}}">Logout</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <h2>Your Campaigns</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ad Name</th>
+                        <th>Sponsor Name</th>
+                        <th>Progress</th>
+                        <th>Payment</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for campaign in ongoing_campaigns %}
+                    <tr>
+                        <td>{{campaign.ad_name}}</td>
+                        <td> {{campaign.sender_id}}</td>
+                        <td><progress max=100 value={{campaign.progress}}> </progress>
+                            <label>{{campaign.progress}}</label>
+                        </td>
+                        <td>{{campaign.payment}}</td>
+                        <td> <button onclick="openModal({{campaign.id}}, {{campaign.progress}})">Update Progress</button>
+                            <a href="{{ url_for('messages', ad_request_id=campaign.id) }}"><button>Message</button></a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <h2>Sent Ad Requests</h2>
+                
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>
+                                    Ad name
+                                </th>
+                                <th>
+                                    Sponsor Name
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                                <th> 
+                                    Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for adreq in sent_requests %}
+    {% if adreq.ad_status != "Accepted" %}
+        <tr>
+            <td>{{ adreq.ad_name }}</td>
+            <td>{{ adreq.receiver_id }}</td>
+            <td>{{ adreq.ad_status }}</td>
+            <td>
+                <form action="{{ url_for('retract_ad_request', ad_request_id=adreq.id) }}" method="POST">
+                    {% if adreq.ad_status == "Pending" %}
+                        <button type="submit">Retract</button>
+                    {% elif adreq.ad_status == "Paid" %}
+                        <button type="submit">Close Ad</button>
+                    {% endif %}
+                </form>
+            </td>
+        </tr>
+    {% endif %}
+{% endfor %}
+
+                        </tbody>
+                    </table>
+        
+                    <div id="progressModal" class="modal">
+                        <div class="modal-content">
+                            <span class="close" onclick="closeModal()">&times;</span>
+                            <h2>Update Progress</h2>
+                            <form id="progressForm" action="{{ url_for('update_progress') }}" method="POST">
+                                <input type="hidden" id="campaignId" name="campaign_id">
+                                <div class="slider-container">
+                                    <label for="progress">Progress: <span id="progressValue">0</span>%</label>
+                                    <input type="range" id="progressSlider" name="progress" min="0" max="100" value="0" oninput="updateSliderValue()">
+                                </div>
+                                <button type="submit">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+        
+            <h2>Received Ad Requests</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>
+                            Ad name
+                        </th>
+                        <th>
+                            Sponsor Name
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th> 
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if received_requests %}
+                    {% for ad_request in received_requests %}
+                    <tr>
+                        <td>{{ ad_request.ad_name }}</td>
+                        <td>{{ad_request.sender_id}}</td>
+                        <td> {{ ad_request.ad_status }}</td>
+                        <td>
+                            <form action="{{ url_for('accept_ad_request', ad_request_id=ad_request.id) }}" method="POST">
+                                <button type="submit">Accept</button>
+                            </form>
+                            <form action="{{ url_for('reject_ad_request_inf', ad_request_id=ad_request.id) }}" method="POST">
+                                <button type="submit">Reject</button>
+                            </form>
+                           
+                        
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+               
+        
+    </div>
+    <script>
+        function openModal(campaignId, currentProgress) {
+            document.getElementById('campaignId').value = campaignId;
+            document.getElementById('progressSlider').value = currentProgress;
+            document.getElementById('progressValue').innerText = currentProgress;
+            document.getElementById('progressModal').style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById('progressModal').style.display = "none";
+        }
+
+        function updateSliderValue() {
+            document.getElementById('progressValue').innerText = document.getElementById('progressSlider').value;
+        }
+    </script>
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        <div class="flash-messages">
+            {% for message, category in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+</body>
+</html>

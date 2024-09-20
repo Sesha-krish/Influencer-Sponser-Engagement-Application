@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sponsor Dashboard</title>
+    <link rel="stylesheet" href="\static\sponsordash.css">
+</head>
+<body>
+    <div id="campaignModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('campaignModal')">&times;</span>
+            <h2>Campaign Details</h2>
+            <p>Campaign Name: <span id="campaignName"></span></p>
+            <p>Campaign Description: <span id="campaignDes"></span></p>
+            <p>Category: <span id="campaignCategory"></span></p>
+            <p>Budget: <span id="campaignBudget"></span></p>
+            <p>Start Date: <span id="campaignSDate"></span></p>
+            <p>End Date: <span id="campaignEDate"></span></p>
+            <p>Campaign Goal: <span id="campaignGoal"></span></p>
+            <p>Campaign Progress: <span id="campaignProgress"></span></p>
+        </div>
+    </div>
+    
+    <div id="updateCampaignModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('updateCampaignModal')">&times;</span>
+            <h2>Update Campaign</h2>
+            <form id="updateCampaignForm" action="" method="POST">
+                <label for="name">Campaign Name:</label>
+                <input type="text" id="updateName" name="name"><br><br>
+                <label for="des">Campaign Description:</label>
+                <input type="text" id="updateDes" name="des"><br><br>
+                <label for="category">Category:</label>
+                <input type="text" id="updateCategory" name="category"><br><br>
+                <label for="budget">Budget:</label>
+                <input type="number" id="updateBudget" name="budget"><br><br>
+                <label for="s_date">Start Date:</label>
+                <input type="date" id="updateSDate" name="s_date"><br><br>
+                <label for="e_date">End Date:</label>
+                <input type="date" id="updateEDate" name="e_date"><br><br>
+                <label for="camp_goal">Campaign Goal:</label>
+                <input type="text" id="updateGoal" name="camp_goal"><br><br>
+                <label for="camp_stat">Campaign Status:</label>
+                <select id="updateStatus" name="camp_status">
+                    <option value="Completed">Completed</option>
+                    <option value="Incomplete">Incomplete</option>
+                </select>
+                <label for="prog">What's the current progress:</label>
+                <input type="number" id="updateProgress" name="progress" min="0" max="100"><br><br>
+                <input type="submit" value="Update Campaign">
+            </form>
+        </div>
+    </div>
+    <script>
+
+function closeModal() {
+    document.getElementById('influencerModal').style.display = 'none';
+}
+        function openViewModal(campaignId) {
+            fetch(`/view_campaign/${campaignId}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('campaignName').innerText = data.name;
+                    document.getElementById('campaignDes').innerText = data.des;
+                    document.getElementById('campaignCategory').innerText = data.category;
+                    document.getElementById('campaignBudget').innerText = data.budget;
+                    document.getElementById('campaignSDate').innerText = data.s_date;
+                    document.getElementById('campaignEDate').innerText = data.e_date;
+                    document.getElementById('campaignGoal').innerText = data.camp_goal;
+                    document.getElementById('campaignProgress').innerText = data.progress;
+                    document.getElementById('campaignModal').style.display = 'block';
+                });
+        }
+    
+        function openUpdateModal(campaignId) {
+            fetch(`/view_campaign/${campaignId}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('updateName').value = data.name;
+                    document.getElementById('updateDes').value = data.des;
+                    document.getElementById('updateCategory').value = data.category;
+                    document.getElementById('updateBudget').value = data.budget;
+                    document.getElementById('updateSDate').value = data.s_date;
+                    document.getElementById('updateEDate').value = data.e_date;
+                    document.getElementById('updateGoal').value = data.camp_goal;
+                    document.getElementById('updateProgress').value = data.progress;
+                    document.getElementById('updateStatus').value = data.status;
+                    document.getElementById('updateCampaignForm').action = `/update_campaign/${campaignId}`;
+                    document.getElementById('updateCampaignModal').style.display = 'block';
+                });
+        }
+    
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+    </script>
+    
+    
+    <div class="container">
+        <div class="sidebar">
+            <h2>Hello, {{ session['username'] }}!</h2>
+            <ul>
+                <li><a href="#">Sponsor Dashboard</a></li>
+                <li><a href="{{url_for('find_influencers')}}">Find Influencers</a></li>
+                <li><a href="{{url_for('sponsor_profile')}}">Profile</a></li>
+                <li><a href="{{url_for('stats')}}">Stats</a></li> 
+                <li><a href="{{url_for('logout',username=session['username'])}}">Logout</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <section id="profile">
+                <h2>Dashboard</h2>
+            </section>
+            
+
+<section id="ongoing-campaigns">
+    <h2>Ongoing Campaigns</h2>
+    <a href="{{ url_for('add_campaign') }}">Add Campaign</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Campaign Name</th>
+                <th>Progress</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for campaign in ongoing_campaigns %}
+            <tr>
+                <td>{{ campaign.name }}</td>
+                <td>
+                    <progress max="100" value="{{ campaign.progress }}"></progress>
+                    <label>{{ campaign.progress }}%</label>
+                </td>
+                <td>
+                    <button type="button" onclick="openViewModal({{ campaign.id }})">View</button>
+                    <button type="button" onclick="openUpdateModal({{ campaign.id }})">Update</button>
+
+                    <form action="{{ url_for('delete_campaign', campaign_id=campaign.id) }}"  method="POST">
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+<section id="Ongoing-ad-requests">
+    <h2>Ad Requests</h2>
+    <h2>Your Campaigns</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ad Name</th>
+                        <th>Sponsor Name</th>
+                        <th>Progress</th>
+                        <th>Payment</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for campaign in ongoingad %}
+                    <tr>
+                        <td>{{campaign.ad_name}}</td>
+                        <td> {{campaign.sender_id}}</td>
+                        <td><progress max=100 value={{campaign.progress}}> </progress>
+                            <label>{{campaign.progress}}</label>{{campaign.status}}</td>
+                        <td>{{campaign.payment}}
+                        
+                            {% if campaign.ad_status == 'Paid' %}
+                                <span style="background-color: green; color: white;">Paid</span></td>
+                            {% else %}<td>
+                                <a href="{{ url_for('pay_ad', ad_request_id=campaign.id) }}"><button type="button">Pay</button></a>
+                            {% endif %}
+                       
+                        
+                            <a href="{{ url_for('messages', ad_request_id=campaign.id) }}"><button>Message</button></a></td>
+                            </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+</section>
+
+            <section id="recieved-ad-requests">
+                <h2>Received requests</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Campaign Name</th>
+                            <th>Influencer</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ad_request in rec_ad_requests %}
+                        <tr>
+                            <td>{{ ad_request.ad_name }}</td>
+                            <td>{{ ad_request.sender_id }}</td>
+                            <td>
+                               
+                                <form action="{{ url_for('reject_ad_request_spon', ad_request_id=ad_request.id) }}" method="POST">
+                                    <button type="submit">Reject</button>
+                                </form>
+                            
+                                <form action="{{url_for('accept_ad_request_spon',ad_request_id=ad_request.id)}}" method="POST">
+                                    <button type="submit">Accept</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+            <section id="sent-ad-requests">
+                <h2>Sent Ad Requests</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Campaign Name</th>
+                            <th>Influencer</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ad_request in sent_ad_requests %}
+                        <tr>
+                            <td>{{ ad_request.ad_name }}</td>
+                            <td>{{ ad_request.receiver_id }}</td>
+                            <td>{{ad_request.status}}
+                            </td>
+                            <td> <form action="{{url_for('retract_ad_request',ad_request_id=ad_request.id) }}" method="POST">
+                                
+                                <button type="submit">Retract</button>  </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+           
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        <ul class="flashes">
+        {% for category, message in messages %}
+            <li class="flash {{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    {% endwith %}
+            </section>
+        </div>
+    </div>
+    
+    
+</body>
+</html>

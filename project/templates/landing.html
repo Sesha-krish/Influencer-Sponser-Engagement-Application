@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Landing Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="landing-container">
+        <h1>Welcome to Hello</h1>
+        <p>This is Hello, where your ads meet your dreams</p>
+        <p>An application for sponsors to create campaigns and collaborate with influencers.</p>
+        <div class="landing-buttons">
+            <a href="{{ url_for('login') }}"><button type="button">Login</button></a>
+            <a href="{{ url_for('influencersignup') }}"><button type="button">Register as Influencer</button></a>
+            <a href="{{ url_for('sponsorsignup') }}"><button type="button">Register as Sponsor</button></a>
+        </div>
+    </div>
+</body>
+</html>

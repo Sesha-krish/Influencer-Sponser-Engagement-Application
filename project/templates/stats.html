@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sponsor Stats</title>
+    <link rel="stylesheet" href="\static\sponsordash.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Hello, {{ session['username'] }}!</h2>
+            <ul>
+                <li><a href="{{url_for('sponsordashboard')}}">Sponsor Dashboard</a></li>
+                <li><a href="{{url_for('find_influencers')}}">Find Influencers</a></li>
+                <li><a href="{{url_for('sponsor_profile')}}">Profile</a></li>
+                <li><a href="{{url_for('stats')}}">Stats</a></li>
+                <li><a href="{{url_for('logout',username=session['username'])}}">Logout</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <h2>Stats</h2>
+            <p>Total Campaigns Created: {{ total_campaigns }}</p>
+            <canvas id="adsChart"></canvas>
+        </div>
+    </div>
+    
+    <script>
+        const ctx = document.getElementById('adsChart').getContext('2d');
+        const adsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Paid', 'Pending', 'Accepted'],
+                datasets: [{
+                    label: 'Number of Ads',
+                    data: [{{ paid_ads }}, {{ pending_ads }}, {{ accepted_ads }}],
+                    backgroundColor: ['green', 'red', 'grey']
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

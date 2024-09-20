@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Signup form</title>
+        <link rel="stylesheet" href="static\style.css">
+    </head>
+    <body>
+            <form action="" method="POST">
+                <h2>Influencer Signup</h2>
+                <label for="usrnm">Enter your Username</label>
+                <input id="usrnm" type="text" name="username" placeholder="Username" required>
+                
+                <label for="pwd">Enter your Password</label>
+                <input id="pwd" type="password" placeholder="password" name="password" required>
+                
+                <label for="pwdd">Re-enter your Password</label>
+                <input id="pwdd" type="password" placeholder="password" name="repassword" required>
+                
+                <label for="em">Enter your Email ID</label>
+                <input type="text" name="email" id="em" required>
+                
+                <label>What platform do you prefer?</label>
+                <select id="pltfm" name="platform" required>
+                    <option value="Youtube">Youtube</option>
+                    <option value="Instagram">Instagram</option>
+                </select>
+                
+                <label>What is your niche?</label>
+                <select id="nic" name="niche" required>
+                    <option value="cooking">Cooking</option>
+                    <option value="entertainment">Entertainment</option>
+                    <option value="gaming">Gaming</option>
+                    <option value="tech">Tech</option>
+                </select>
+                
+                <button type="submit">Register</button>
+            </form>
+        {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            <ul class="flashes">
+            {% for message, category in messages %}
+                <li class="flash {{ category }}">{{message}}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        {% endwith %}
+
+    </body>
+</html>

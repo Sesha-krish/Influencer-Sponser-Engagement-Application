@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Stats</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='admindash.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Hello Admin!</h2>
+            <ul>
+                <li><a href="{{ url_for('admindashboard') }}">Info Tab</a></li>
+                <li><a href="{{ url_for('searchh_campaigns') }}">Search Campaigns</a></li>
+                <li><a href="{{ url_for('searchh_influencers') }}">Search Influencers</a></li>
+                <li><a href="{{ url_for('searchh_sponsors') }}">Search Sponsors</a></li>
+                <li><a href="{{ url_for('admin_stats') }}">Stats</a></li>
+                <li><a href="{{ url_for('login') }}">Logout</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <h2>Admin Stats</h2>
+            <div>
+                <h3>Total Counts</h3>
+                <ul>
+                    <li>Total Sponsors: {{ total_sponsors }}</li>
+                    <li>Total Influencers: {{ total_influencers }}</li>
+                    <li>Total Campaigns: {{ total_campaigns }}</li>
+                    <li>Total Ad Requests: {{ total_ad_requests }}</li>
+                </ul>
+            </div>
+
+            <div>
+                <h3>Ad Request Status Distribution</h3>
+                <canvas id="adStatusChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var ctx = document.getElementById('adStatusChart').getContext('2d');
+        var adStatusChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Pending', 'Accepted', 'Paid'],
+                datasets: [{
+                    data: [{{ ad_status_data['Pending'] }}, {{ ad_status_data['Accepted'] }}, {{ ad_status_data['Paid'] }}],
+                    backgroundColor: ['#FF0000', '#808080', '#008000'],
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                }
+            }
+        });
+    </script>
+</body>
+</html>

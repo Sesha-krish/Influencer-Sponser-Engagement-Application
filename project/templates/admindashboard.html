@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="\static\admindash.css">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Hello Admin!</h2>
+            <ul>
+                <li><a href="">Info Tab</a></li>
+                <li><a href="{{ url_for('searchh_campaigns') }}">Search Campaigns</a></li>
+                    <li><a href="{{ url_for('searchh_influencers') }}">Search Influencers</a></li>
+                    <li><a href="{{ url_for('searchh_sponsors') }}">Search Sponsors</a></li>
+                    <li><a href="stats">Stats</a></li>
+                    <li><a href="{{ url_for('login') }}">Logout</a></li>
+        
+            </ul>
+        </div>
+        <div class="content">
+            <section id="info">
+                <h2>Ongoing Campaigns</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Campaign Name</th>
+                            <th>Progress</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for campaign in ongoing_campaigns %}
+                        <tr>
+                            <td>{{ campaign.name }}</td>
+                            <td>
+                                <progress max=100 value={{campaign.progress}}></progress>
+                                <label>{{campaign.progress}}%</label>
+                            </td>
+                            <td>{{ campaign.status }}</td>
+                            <td>
+                                <form action="{{url_for('flag_campaign',campaign_id=campaign.id)}}" method="GET">
+                                    <button type="submit">Flag</button>
+                                </form>
+                               
+                                
+                               
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+            <section id="flagged">
+                <h2>Flagged Campaigns</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Campaign Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for flagged_campaign in flagged_campaigns %}
+                        <tr>
+                            <td>{{ flagged_campaign.name }}</td>
+                            <td>
+                                <button>View</button>
+                                <form action="{{ url_for('remove_flag', campaign_id=flagged_campaign.id) }}" method="POST">
+                                    <button type="submit">Remove</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </div>
+</body>
+</html>

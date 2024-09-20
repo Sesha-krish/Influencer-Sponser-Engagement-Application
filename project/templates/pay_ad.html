@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Page</title>
+    <link rel="stylesheet" href="\static\payments.css">
+</head>
+<body>
+    <h2>Complete Your Payment for {{ ad_request.ad_name }}</h2>
+
+    <form action="{{ url_for('pay_ad', ad_request_id=ad_request.id) }}" method="POST">
+        <label for="payment_method">Select Payment Method:</label>
+        <select id="payment_method" name="payment_method" required>
+            <option value="upi">Pay with UPI</option>
+            <option value="net_banking">Net Banking</option>
+            <option value="card">Credit/Debit Card</option>
+        </select>
+
+        <div id="upi_payment" class="payment_method">
+            <label for="upi_id">UPI ID:</label>
+            <input type="text" id="upi_id" name="upi_id">
+        </div>
+
+        <div id="net_banking_payment" class="payment_method">
+            <label for="bank_account">Bank Account Number:</label>
+            <input type="text" id="bank_account" name="bank_account">
+            <label for="bank_name">Bank Name:</label>
+            <input type="text" id="bank_name" name="bank_name">
+            <label for="ifsc_code">Bank IFSC Code:</label>
+            <input type="text" id="ifsc_code" name="ifsc_code">
+        </div>
+
+        <div id="card_payment" class="payment_method">
+            <label for="card_number">Card Number:</label>
+            <input type="text" id="card_number" name="card_number" maxlength="16">
+            <label for="expiry_date">Expiry Date:</label>
+            <input type="text" id="expiry_date" name="expiry_date" placeholder="MM/YY">
+            <label for="cvv">CVV:</label>
+            <input type="text" id="cvv" name="cvv" maxlength="3">
+        </div>
+
+        <button type="submit">Pay</button>
+    </form>
+
+    <script>
+        const paymentMethodSelect = document.getElementById('payment_method');
+        const paymentMethods = document.querySelectorAll('.payment_method');
+
+        paymentMethodSelect.addEventListener('change', function() {
+            paymentMethods.forEach(method => method.style.display = 'none');
+            document.getElementById(paymentMethodSelect.value + '_payment').style.display = 'block';
+        });
+
+        paymentMethodSelect.dispatchEvent(new Event('change')); // trigger change event on page load
+    </script>
+</body>
+</html>

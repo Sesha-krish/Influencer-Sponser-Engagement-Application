@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Campaigns</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='admindash.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Hello Admin!</h2>
+            <ul>
+                <li><a href="{{ url_for('admindashboard') }}">Info Tab</a></li>
+                <li><a href="{{ url_for('searchh_campaigns') }}">Search Campaigns</a></li>
+                <li><a href="{{ url_for('searchh_influencers') }}">Search Influencers</a></li>
+                <li><a href="{{ url_for('searchh_sponsors') }}">Search Sponsors</a></li>
+                <li><a href="{{url_for('admin_stats')}}">Stats</a></li>
+                <li><a href="{{ url_for('login') }}">Logout</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <h2>Search Campaigns</h2>
+            <form method="POST">
+                <input type="text" name="search_query" placeholder="Search by Campaign Name">
+                <button type="submit">Search</button>
+               
+            </form>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Campaign Name</th>
+                        <th>User ID</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for campaign in campaigns %}
+                    <tr>
+                        <td>{{ campaign.name }}</td>
+                        <td>{{ campaign.user_id }}</td>
+                        <td>{{ campaign.des }}</td>
+                        <td>{{ campaign.category }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

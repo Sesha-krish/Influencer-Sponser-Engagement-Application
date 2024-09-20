@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Campaigns</title>
+    <link rel="stylesheet" href="\static\influencerdash.css">
+</head>
+<body>
+<div class="container">
+    <div class="sidebar">
+        <h2>Hello, {{ session['username'] }}!</h2>
+        <ul>
+            <li><a href="{{url_for('sponsordashboard')}}">Profile</a></li>
+            <li><a href="{{url_for('find_influencers')}}">Find Influencers</a></li>
+            <li><a href="{{url_for('stats')}}">Stats</a></li>
+            <li><a href="{{url_for('logout',username=session['username'])}}">Logout</a></li>
+        </ul>
+    </div>
+
+<div class="content">
+    <h2>Find Influencers</h2>
+    <form method="POST" action="{{ url_for('search_influencers') }}">
+        <input type="text" name="search_term" id="search-bar" placeholder="Search by campaign name">
+        <button type="submit">Search</button>
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th>Influencer id</th>
+                <th>Influencer Niche</th>
+                <th>Rating</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {%for influencer in influencers%}
+        <tr>
+            <td>
+                {{influencer.username}}
+            </td>
+            <td>
+                {{influencer.niche}}
+            </td>
+            <td>
+                50
+            </td>
+            <td>
+                <form action="{{ url_for('send_ad_request_spon', influencer_id=influencer.username) }}" method="POST">
+                    <button type="submit">Send Request</button>
+                </form>
+                <form action="{{url_for('view_influencer',influencer_id=influencer.username)}}" method="GET">
+                    <button type="submit">View</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        
+
+    </table>
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        <ul class="flashes">
+        {% for category, message in messages %}
+            <li class="flash {{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    {% endwith %}
+</div>
+</body>
+</html>

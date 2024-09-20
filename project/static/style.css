@@ -1,0 +1,82 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+*{
+    margin:0;
+    padding:0;
+    transition:1s;
+
+}
+
+body{
+    height:100vh;
+    width:100%;
+    display:flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content:center;
+    align-items:center;
+    background-color: 
+     rgb(233, 229, 236);
+}
+
+form{
+    background-color: rgba(139, 58, 155, 0.2);
+    display:flex;
+    flex-direction:column;
+    width:20em;
+    max-height: 50em;
+    box-shadow: 5px 5px 5px rgba(71, 70, 70, 0.89);
+    border-radius: 15px;
+
+}
+
+h2{
+    margin-top: 20px;
+    color: rgb(57, 56, 56);
+    font-family: Roboto;
+    text-align: center;
+    margin-bottom: 5px;
+    word-spacing: 3px;
+}
+
+label{
+    padding:5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-family: Noto Sans;
+    margin-left: 8%;
+}
+
+input{
+    width:10rem;
+    margin:auto;
+    background: none;
+    border: none;
+    outline:none;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+button{
+    border:none;
+    width:40%;
+    padding:3px;
+    margin:auto;
+    font-family: Roboto;
+    margin-bottom: 20px;
+    margin-top: 5px;
+    border-radius: 5px;
+    background-color: rgb(60, 143, 232);
+    box-shadow: 0.5px 0.5px 0.5px rgb(60, 143, 232,0.9);
+    color: white;
+  
+}
+
+button:hover{
+    background-color: antiquewhite;
+    color:rgb(146, 146, 207);
+    transition:0.5s;
+}
+
+

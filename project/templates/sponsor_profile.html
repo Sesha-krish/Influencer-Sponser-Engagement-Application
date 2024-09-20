@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sponsor Profile</title>
+    <link rel="stylesheet" href="\static\profilee.css">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Hello, {{ session['username'] }}!</h2>
+            <ul>
+                <li><a href="{{ url_for('sponsordashboard') }}">Dashboard</a></li>
+                <li><a href="{{url_for('find_influencers')}}">Find Influencers</a></li>
+                <li><a href="{{url_for('sponsor_profile')}}">Profile</a></li>
+                <li><a href="{{url_for('stats')}}">Stats</a></li>
+                <li><a href="{{url_for('logout', username=session['username'])}}">Logout</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <h2>Your Profile</h2>
+            <form action="{{ url_for('sponsor_profile') }}" method="POST" enctype="multipart/form-data">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" value="{{ user.username }}" required>
+                
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" value="{{ user.email }}" required>
+                
+                <label for="company">Company</label>
+                <input type="text" id="company" name="company" value="{{ user.company }}" required>
+                
+                <label for="industry">Industry</label>
+                <input type="text" id="industry" name="industry" value="{{ user.industry }}" required>
+                
+                <label for="profile_picture">Profile Picture</label>
+                <input type="file" id="profile_picture" name="profile_picture">
+                {% if user.profile_picture %}
+                    <img src="{{ url_for('static', filename='uploads/' ~ user.profile_picture) }}" alt="Profile Picture" width="100">
+                    <button type="submit" name="remove_picture" value="1" style="background-color: red; color: white; margin-top: 10px;">Remove Profile Picture</button>
+                {% endif %}
+    
+                <button type="submit">Update Profile</button>
+            </form>
+            {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                <ul class="flashes">
+                {% for category, message in messages %}
+                    <li class="flash {{ category }}">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+</body>
+</html>

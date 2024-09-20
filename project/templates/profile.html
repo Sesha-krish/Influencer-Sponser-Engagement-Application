@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="\static\profilee.css">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Hello, {{ session['username'] }}!</h2>
+            <ul>
+                <li><a href="{{ url_for('influencerdashboard') }}">Dashboard</a></li>
+                <li><a href="{{url_for('find_campaigns')}}">Find campaigns</a></li>
+                <li><a href="{{url_for('profile')}}">Profile</a></li>
+                <li><a href="{{url_for('logout', username=usrnm)}}">Logout</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <h2>Your Profile</h2>
+            <form action="{{ url_for('profile') }}" method="POST" enctype="multipart/form-data">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" value="{{ user.username }}" required>
+                
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" value="{{ user.email }}" required>
+                
+                <label for="platform">Platform</label>
+                <select id="platform" name="platform" required>
+                    <option value="Youtube" {% if user.platform == 'Youtube' %}selected{% endif %}>Youtube</option>
+                    <option value="Instagram" {% if user.platform == 'Instagram' %}selected{% endif %}>Instagram</option>
+                </select>
+                
+                <label for="niche">Niche</label>
+                <select id="niche" name="niche" required>
+                    <option value="cooking" {% if user.niche == 'cooking' %}selected{% endif %}>Cooking</option>
+                    <option value="entertainment" {% if user.niche == 'entertainment' %}selected{% endif %}>Entertainment</option>
+                    <option value="gaming" {% if user.niche == 'gaming' %}selected{% endif %}>Gaming</option>
+                    <option value="tech" {% if user.niche == 'tech' %}selected{% endif %}>Tech</option>
+                </select>
+                
+                
+                
+                <label for="profile_picture">Profile Picture</label>
+    <input type="file" id="profile_picture" name="profile_picture">
+    {% if user.profile_picture %}
+        <img src="{{ url_for('static', filename='uploads/' ~ user.profile_picture) }}" alt="Profile Picture" width="100">
+        <button type="submit" name="remove_picture" value="1" style="background-color: red; color: white; margin-top: 10px;">Remove Profile Picture</button>
+    {% endif %}
+    
+    
+                <button type="submit">Update Profile</button>
+            </form>
+            {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                <ul class="flashes">
+                {% for message, category in messages %}
+                    <li class="flash {{ category }}">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+</body>
+</html>

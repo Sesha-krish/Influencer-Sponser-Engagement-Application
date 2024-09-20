@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Sponsors</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='admindash.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Hello Admin!</h2>
+            <ul>
+                <li><a href="{{ url_for('admindashboard') }}">Info Tab</a></li>
+                <li><a href="{{ url_for('searchh_campaigns') }}">Search Campaigns</a></li>
+                <li><a href="{{ url_for('searchh_influencers') }}">Search Influencers</a></li>
+                <li><a href="{{ url_for('searchh_sponsors') }}">Search Sponsors</a></li>
+                <li><a href="{{url_for('admin_stats')}}">Stats</a></li>
+                <li><a href="{{ url_for('login') }}">Logout</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <h2>Search Sponsors</h2>
+            <form method="POST">
+                <input type="text" name="search_query" placeholder="Search by Username">
+                <button type="submit">Search</button>
+            </form>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Company</th>
+                        <th>Industry</th>
+                        <th>Profile Picture</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sponsor in sponsors %}
+                    <tr>
+                        <td>{{ sponsor.username }}</td>
+                        <td>{{ sponsor.company }}</td>
+                        <td>{{ sponsor.industry }}</td>
+                        <td><img src="{{ sponsor.profile_picture }}" alt="Profile Picture" width="50"></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

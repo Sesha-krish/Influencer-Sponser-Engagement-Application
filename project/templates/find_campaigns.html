@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Campaigns</title>
+    <link rel="stylesheet" href="\static\influencerdash.css">
+</head>
+<body>
+    
+    <div class="container">
+        <div class="sidebar">
+            <h2>Hello, {{ session['username'] }}!</h2>
+            <ul>
+                <li><a href="{{ url_for('influencerdashboard') }}">Dashboard</a></li>
+                <li><a href='#'>View Campaigns</a></li>
+                <li><a href="{{url_for('profile')}}">Profile</a></li>
+                <li><a href="{{url_for('logout',username=session['username'])}}">Logout</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <h2>Find Campaigns</h2>
+            {% with messages = get_flashed_messages(with_categories=True) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for message, category in messages %}
+                            <div class="flash {{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            <form method="POST" action="{{ url_for('search_campaigns') }}">
+                <input type="text" name="search_term" id="search-bar" placeholder="Search by campaign name">
+                <button type="submit">Search</button>
+            </form>
+            <form method="POST" action="{{ url_for('filter_campaigns') }}">
+                <select name="filter_type">
+                    <option value="MR">Most Recent</option>
+                    <option value="LR">Least Recent</option>
+                    <option value="BL2H">Budget:Low to High</option>
+                    <option value="BH2L">Budget High to low</option>
+                    <option value="GBC">Category</option>
+                </select>
+                <button type="submit">Filter</button>
+            </form>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Campaign Name</th>
+                        <th>Sponsor Name</th>
+                        <th>Status</th>
+                        <th>Budget</th>
+                        <th>Category</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="campaigns-table-body">
+                    {% for campaign in campaigns %}
+                    <tr>
+                        <td>{{ campaign.name }}</td>
+                        <td>{{ campaign.user_id }}</td>
+                        <td>{{ campaign.status }}</td>
+                        <td>{{ campaign.budget }}</td>
+                        <td>{{ campaign.category }}</td>
+                        <td>
+                            <form action="{{ url_for('send_ad_request', campaign_id=campaign.id) }}" method="POST">
+                                <button type="submit">Send Request</button>
+                            </form>
+                            <form action="{{ url_for('view_campaign', campaign_id=campaign.id) }}" method="GET">
+                                <button type="submit">View</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

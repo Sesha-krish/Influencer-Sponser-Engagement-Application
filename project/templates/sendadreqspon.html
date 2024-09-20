@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<head>
+    <link rel="stylesheet" href="\static\style.css">
+</head>
+<body>
+    <form action="" method="POST">
+        <label for="campaignss">Select the campaign</label>
+        <select id="campaignss" name="campaignss" type="text">
+            {% for campaign in Campaigns %}
+                <option value="{{campaign.id}}">{{campaign.name}}</option>
+            {% endfor %}
+        </select>
+        <label for="payment">Enter the payment amount</label>
+        <input type="number" id="payment" name="payment">
+
+        <button type="submit">Give Ad Request</button>
+
+    </form>
+</body>
